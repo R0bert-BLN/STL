@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -50,24 +51,23 @@ int main()
 		inFile >> doctors[i].speciality;
 	}
 
-	for (int i = 0; i < no_problems; i++)
+	vector<string> busyDoctors;
+
+	for (const auto& problem : problems)
 	{
-		ok = false;
-
-		for (int j = 0; j < no_doctors; j++)
+		for (const auto& doctor : doctors)
 		{
-			if (problems[i].speciality == doctors[j].speciality)
+			if (problem.speciality == doctor.speciality)
 			{
-				cout << problems[i].idProblem << " Acceptat" << endl;
-				ok = true;
+				if (find(busyDoctors.begin(), busyDoctors.end(), doctor.idDoctor) == busyDoctors.end())
+				{
+					cout << doctor.idDoctor << " " << problem.idProblem << endl;
 
-				break;
+					busyDoctors.emplace_back(doctor.idDoctor);
+
+					break;
+				}
 			}
-		}
-
-		if (!ok)
-		{
-			cout << problems[i].idProblem << " Respins" << endl;
 		}
 	}
 
