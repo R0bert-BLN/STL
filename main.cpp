@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cctype>
 #include <algorithm>
 
 using namespace std;
@@ -20,56 +21,54 @@ struct Doctor
 
 int main()
 {
-	ifstream inFile("input2.txt");
+	ifstream file("input3.txt");
 
-	if (!inFile.is_open())
+	if (!file.is_open())
 	{
-		cerr << "Eroare la deschiderea fisierului" << endl;
+		cerr << "Error opening file" << endl;
 
 		return 1;
 	}
 
-	int no_problems;
-	int no_doctors;
-	bool ok;
+	int noProblems;
+	int noDoctors;
 
-	inFile >> no_problems;
-	vector<Problem> problems(no_problems);
+	file >> noProblems;
+	vector<Problem> problems(noProblems);
 
-	for (int i = 0; i < no_problems; i++)
+	for (int i = 0; i < noProblems; i++)
 	{
-		inFile >> problems[i].idProblem;
-		inFile >> problems[i].speciality;
+		file >> problems[i].idProblem >> problems[i].speciality;
+
+		transform(begin(problems[i].idProblem) + 1, end(problems[i].idProblem), begin(problems[i].idProblem) + 1, tolower);
+		transform(begin(problems[i].speciality) + 1, end(problems[i].speciality), begin(problems[i].speciality) + 1, tolower);
 	}
 
-	inFile >> no_doctors;
-	vector<Doctor> doctors(no_doctors);
+	file >> noDoctors;
+	vector<Doctor> doctors(noDoctors);
 
-	for (int i = 0; i < no_doctors; i++)
+	for (int i = 0; i < noDoctors; i++)
 	{
-		inFile >> doctors[i].idDoctor;
-		inFile >> doctors[i].speciality;
+		file >> doctors[i].idDoctor >> doctors[i].speciality;
+
+		transform(begin(doctors[i].idDoctor) + 1, end(doctors[i].idDoctor), begin(doctors[i].idDoctor) + 1, tolower);
+		transform(begin(doctors[i].speciality) + 1, end(doctors[i].speciality), begin(doctors[i].speciality) + 1, tolower);
 	}
 
-	vector<string> busyDoctors;
-
-	for (const auto& problem : problems)
-	{
-		for (const auto& doctor : doctors)
+	for_each(begin(doctors), end(doctors), [&problems](Doctor& doctor)
 		{
-			if (problem.speciality == doctor.speciality)
-			{
-				if (find(busyDoctors.begin(), busyDoctors.end(), doctor.idDoctor) == busyDoctors.end())
+			auto it = find_if(begin(problems), end(problems), [&doctor](Problem& problem)
 				{
-					cout << doctor.idDoctor << " " << problem.idProblem << endl;
+					return problem.speciality == doctor.speciality;
+				});
 
-					busyDoctors.emplace_back(doctor.idDoctor);
+			if (it != end(problems))
+			{
+				cout << doctor.idDoctor << " " << it->idProblem << endl;
 
-					break;
-				}
+				problems.erase(it);
 			}
-		}
-	}
+		});
 
 	return 0;
 }
