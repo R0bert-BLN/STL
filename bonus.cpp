@@ -11,6 +11,7 @@ struct Problem
 {
 	string idProblem;
 	string speciality;
+	int time;
 };
 
 struct Doctor
@@ -21,7 +22,7 @@ struct Doctor
 
 int main()
 {
-	ifstream file("input.txt");
+	ifstream file("input4_bonus.txt");
 
 	if (!file.is_open())
 	{
@@ -38,7 +39,7 @@ int main()
 
 	for (int i = 0; i < noProblems; i++)
 	{
-		file >> problems[i].idProblem >> problems[i].speciality;
+		file >> problems[i].idProblem >> problems[i].speciality >> problems[i].time;
 	}
 
 	file >> noDoctors;
@@ -51,16 +52,34 @@ int main()
 
 	for_each(begin(doctors), end(doctors), [&problems](Doctor& doctor)
 		{
-			auto it = find_if(begin(problems), end(problems), [&doctor](Problem& problem)
-				{
-					return problem.speciality == doctor.speciality;
-				});
+			int hours = 8;
+			int count = 0;
+			string solvedProblems = "";
 
-			if (it != end(problems))
+			while (hours > 0)
 			{
-				cout << doctor.idDoctor << " " << it->idProblem << endl;
+				auto it = find_if(begin(problems), end(problems), [&doctor, &hours](Problem& problem)
+					{
+						return problem.speciality == doctor.speciality && problem.time <= hours;
+					});
 
-				problems.erase(it);
+				if (it != end(problems))
+				{
+					count++;
+					solvedProblems += it->idProblem + " ";
+					hours -= it->time;
+
+					problems.erase(it);
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			if (count > 0)
+			{
+				cout << doctor.idDoctor << " " << count << " " << solvedProblems << endl;
 			}
 		});
 

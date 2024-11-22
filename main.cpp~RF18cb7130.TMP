@@ -21,7 +21,7 @@ struct Doctor
 
 int main()
 {
-	ifstream file("input.txt");
+	ifstream file("input3.txt");
 
 	if (!file.is_open())
 	{
@@ -39,6 +39,9 @@ int main()
 	for (int i = 0; i < noProblems; i++)
 	{
 		file >> problems[i].idProblem >> problems[i].speciality;
+
+		transform(begin(problems[i].idProblem) + 1, end(problems[i].idProblem), begin(problems[i].idProblem) + 1, tolower);
+		transform(begin(problems[i].speciality) + 1, end(problems[i].speciality), begin(problems[i].speciality) + 1, tolower);
 	}
 
 	file >> noDoctors;
@@ -47,6 +50,9 @@ int main()
 	for (int i = 0; i < noDoctors; i++)
 	{
 		file >> doctors[i].idDoctor >> doctors[i].speciality;
+
+		transform(begin(doctors[i].idDoctor) + 1, end(doctors[i].idDoctor), begin(doctors[i].idDoctor) + 1, tolower);
+		transform(begin(doctors[i].speciality) + 1, end(doctors[i].speciality), begin(doctors[i].speciality) + 1, tolower);
 	}
 
 	for_each(begin(doctors), end(doctors), [&problems](Doctor& doctor)
