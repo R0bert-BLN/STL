@@ -24,9 +24,6 @@
     <Text Include="input3.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="input4_bonus.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
