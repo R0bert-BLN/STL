@@ -144,7 +144,6 @@
     <Text Include="input.txt" />
     <Text Include="input2.txt" />
     <Text Include="input3.txt" />
-    <Text Include="input4_bonus.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
